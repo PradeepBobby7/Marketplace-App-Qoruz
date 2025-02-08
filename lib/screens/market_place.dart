@@ -25,7 +25,10 @@ class _MarketPlaseScreenState extends State<MarketPlascreen> {
         ..add(FetchMarketPlaceRequest()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Marketplace"),
+          title: const Text(
+            "Marketplace",
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: Colors.redAccent,
         ),
         body: Column(
