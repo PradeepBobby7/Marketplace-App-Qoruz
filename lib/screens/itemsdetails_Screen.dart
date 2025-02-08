@@ -204,13 +204,13 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                               },
                               icon: const Icon(
                                 FontAwesomeIcons.whatsapp,
-                                size: 18,
+                                size: 15,
                                 color: Colors.green,
                               ),
                               label: const Text(
                                 "Share via WhatsApp",
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
+                                    color: Colors.black, fontSize: 10),
                               ),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
@@ -231,13 +231,13 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                               },
                               icon: const Icon(
                                 FontAwesomeIcons.linkedin,
-                                size: 18,
+                                size: 15,
                                 color: Colors.indigo,
                               ),
                               label: const Text(
                                 "Share via LinkedIn",
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
+                                    color: Colors.black, fontSize: 10),
                               ),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
