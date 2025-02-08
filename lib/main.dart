@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:qoruz_marketplace/screens/market_place.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qoruz_marketplace/api/api_service.dart';
+import 'package:qoruz_marketplace/bloc/marketplace_bloc.dart';
+
+import 'screens/market_place.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,8 +14,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MarketPlaseScreen(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<MarketplaceBloc>(
+            create: (context) => MarketplaceBloc(
+              apiService: ApiService(),
+            ),
+          )
+        ],
+        child: const MarketPlascreen(),
+      ),
     );
   }
 }

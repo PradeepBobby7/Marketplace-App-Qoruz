@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qoruz_marketplace/api/itemdata.dart';
 
 class MarketPlaceDetailsScreen extends StatelessWidget {
   final dynamic request;
@@ -6,9 +7,10 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final itemData = extractItemData(request);
     return Scaffold(
       appBar: AppBar(
-        title: Text(request['user_details']?['name'] ?? ['Details']),
+        title: Text(itemData.name),
         backgroundColor: Colors.white,
       ),
       body: Stack(
@@ -20,16 +22,12 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                 Container(
                   color: Colors.grey.shade300,
                   child: Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Row(
                       children: [
                         CircleAvatar(
                           radius: 30.0,
-                          backgroundImage:
-                              request['user_details']?['profile_image'] != null
-                                  ? NetworkImage(
-                                      request['user_details']['profile_image'])
-                                  : null,
+                          backgroundImage: itemData.profileImage,
                           child:
                               request['user_details']?['profile_image'] == null
                                   ? const Icon(Icons.person, size: 20)
@@ -42,12 +40,12 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              request['user_details']?['name'] ?? 'Unknown',
+                              itemData.name,
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 15),
                             ),
                             Text(
-                              '${request['service_type'] ?? "Unknown"}',
+                              itemData.destination,
                               style: TextStyle(
                                   color: Colors.grey.shade700, fontSize: 12),
                             ),
@@ -61,7 +59,7 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                                   width: 5,
                                 ),
                                 Text(
-                                  '${request['user_details']?['company'] ?? "Unknown"}',
+                                  itemData.company,
                                   style: TextStyle(
                                       color: Colors.grey.shade700,
                                       fontSize: 12),
@@ -72,15 +70,16 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          request['created_at'],
+                          itemData.createdAt,
                           style: const TextStyle(fontSize: 13),
                         ),
                       ],
                     ),
                   ),
+                  
                 ),
                 Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding:const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -97,7 +96,7 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            'Looking for ${request['target_audience'] ?? "Not Specified"}',
+                            'Looking for ${itemData.targetAudience}',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -121,21 +120,25 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                         children: [
                           Container(
                             height: 30,
-                            width: 120,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   Icons.currency_rupee,
                                   size: 15,
                                   color: Colors.grey.shade600,
                                 ),
-                                const Text(
-                                  'Budget: 1,45,000',
-                                  style: TextStyle(fontSize: 12),
+                                Flexible(
+                                  child: Text(
+                                    'Budget: ${itemData.budget}',
+                                    style: const TextStyle(fontSize: 12),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 )
                               ],
                             ),
@@ -145,53 +148,44 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                           ),
                           Container(
                             height: 30,
-                            width: 100,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
                               color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   Icons.branding_watermark_outlined,
                                   size: 15,
                                   color: Colors.grey.shade600,
                                 ),
-                                const Text(
-                                  'Brand: Swiggy',
-                                  style: TextStyle(fontSize: 12),
+                                Flexible(
+                                  child: Text(
+                                    itemData.brand,
+                                    style: const TextStyle(fontSize: 12),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 )
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                       const SizedBox(
                         height: 8,
                       ),
                       buildDetail(
-                          "Budget", request['budget'] ?? "Not Specified"),
-                      buildDetail("Brand", request['brand'] ?? "Not Specified"),
-                      buildDetail(
-                        "Location",
-                        request['request_details']?['cities'] is List<dynamic>
-                            ? (request['request_details']['cities']
-                                    as List<dynamic>)
-                                .join(', ')
-                            : "Not Specified",
+                        "Budget",
+                        itemData.budget,
                       ),
-                      buildDetail("Type", request['type'] ?? "Not Specified"),
-                      buildDetail(
-                        "Language",
-                        request['request_details']?['languages']
-                                is List<dynamic>
-                            ? (request['request_details']['languages']
-                                    as List<dynamic>)
-                                .join(', ')
-                            : "Not Specified",
-                      ),
+                      buildDetail("Brand", itemData.brand),
+                      buildDetail("Location", itemData.cities),
+                      buildDetail("Type", itemData.type),
+                      buildDetail("Language", itemData.language),
                       Text(
-                        request['description'] ?? "No Description",
+                        itemData.description,
                         style: const TextStyle(color: Colors.black),
                       ),
                       const SizedBox(
@@ -262,22 +256,22 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: buildhighlights(
-                                    'Categories', 'Lifestyle,Fashion'),
+                                    'Categories', itemData.categories),
                               ),
                               Expanded(
                                   child: buildhighlights(
-                                      'Platform', 'Instagram,Youtube'))
+                                      'Platform', itemData.platform))
                             ],
                           ),
                           Row(
                             children: [
                               Expanded(
-                                child: buildhighlights('Language',
-                                    'Hindi, Kannada, Malayalam\nTamil & Telugu'),
+                                child: buildhighlights(
+                                    'Language', itemData.language),
                               ),
                               Expanded(
-                                  child: buildhighlights('Location',
-                                      'Bangalore, TamilNadu, Kerala\nGoa Bangalore, TamilNadu'))
+                                  child: buildhighlights(
+                                      'Location', itemData.cities))
                             ],
                           ),
                           Row(
@@ -287,19 +281,19 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                                     buildhighlights('Required Count', '15-20'),
                               ),
                               Expanded(
-                                  child:
-                                      buildhighlights('Our Budget', '1,45,000'))
+                                  child: buildhighlights(
+                                      'Our Budget', itemData.budget))
                             ],
                           ),
                           Row(
                             children: [
                               Expanded(
-                                child:
-                                    buildhighlights('Brand Collab', 'Swiggy'),
+                                child: buildhighlights(
+                                    'Brand Collab', itemData.brand),
                               ),
                               Expanded(
                                   child: buildhighlights('Required Followers',
-                                      'Insta: 500k-1M+\nYoutube: 500k-1M+'))
+                                      'Insta: ${itemData.igFollowerMin}-${itemData.igFollowerMax}\nYouTube: ${itemData.ytFollowersMin}-${itemData.ytFollowersMax}'))
                             ],
                           ),
                         ],
@@ -308,45 +302,47 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Edited"),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 240, 91, 108),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    "Edit",
-                                    style: TextStyle(color: Colors.white),
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Edited"),
                                   ),
-                                )),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 240, 91, 108),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Edit",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
                           ),
                           const SizedBox(
                             width: 15,
                           ),
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Deleted"),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 240, 91, 108)),
-                                child: const Center(
-                                  child: Text(
-                                    "Delete",
-                                    style: TextStyle(color: Colors.white),
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Deleted"),
                                   ),
-                                )),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 240, 91, 108)),
+                              child: const Center(
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),

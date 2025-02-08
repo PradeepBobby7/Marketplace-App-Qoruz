@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qoruz_marketplace/api/itemdata.dart';
 import 'package:qoruz_marketplace/screens/itemsdetails_Screen.dart';
 
 class FilterButton extends StatelessWidget {
@@ -31,6 +32,7 @@ class MarketPlaceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final itemData = extractItemData(request);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -43,25 +45,21 @@ class MarketPlaceItem extends StatelessWidget {
       child: Stack(
         children: [
           Card(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             elevation: 10,
             shadowColor: Colors.black,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       CircleAvatar(
-                        radius: 23.0,
-                        backgroundImage:
-                            request['user_details']?['profile_image'] != null
-                                ? NetworkImage(
-                                    request['user_details']['profile_image'])
-                                : null,
+                        radius: 27.0,
+                        backgroundImage: itemData.profileImage,
                         child: request['user_details']?['profile_image'] == null
                             ? const Icon(Icons.person, size: 20)
                             : null,
@@ -71,12 +69,12 @@ class MarketPlaceItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            request['user_details']?['name'] ?? 'Unknown',
+                            itemData.name,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                           Text(
-                            '${request['service_type'] ?? "Unknown"} at ${request['user_details']?['company'] ?? "Unknown"}',
+                            '${itemData.destination} at ${itemData.company}',
                             style: TextStyle(
                                 color: Colors.grey.shade700, fontSize: 12),
                           ),
@@ -92,7 +90,7 @@ class MarketPlaceItem extends StatelessWidget {
                                 width: 4,
                               ),
                               Text(
-                                request['created_at'],
+                                itemData.createdAt,
                                 style: const TextStyle(fontSize: 10),
                               ),
                             ],
@@ -112,7 +110,7 @@ class MarketPlaceItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        'Looking for ${request['target_audience'] ?? "Not Specified"}',
+                        'Looking for ${itemData.targetAudience}',
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent,
@@ -121,27 +119,13 @@ class MarketPlaceItem extends StatelessWidget {
                     ],
                   ),
                   const Divider(),
-                  buildDetail("Budget", request['budget'] ?? "Not Specified"),
-                  buildDetail("Brand", request['brand'] ?? "Not Specified"),
-                  buildDetail(
-                    "Location",
-                    request['request_details']?['cities'] is List<dynamic>
-                        ? (request['request_details']['cities']
-                                as List<dynamic>)
-                            .join(', ')
-                        : "Not Specified",
-                  ),
-                  buildDetail("Type", request['type'] ?? "Not Specified"),
-                  buildDetail(
-                    "Language",
-                    request['request_details']?['languages'] is List<dynamic>
-                        ? (request['request_details']['languages']
-                                as List<dynamic>)
-                            .join(', ')
-                        : "Not Specified",
-                  ),
+                  buildDetail("Budget", itemData.budget),
+                  buildDetail("Brand", itemData.brand),
+                  buildDetail("Location", itemData.location),
+                  buildDetail("Type", itemData.type),
+                  buildDetail("Language", itemData.language),
                   Text(
-                    request['description'] ?? "No Description",
+                    itemData.description,
                     style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 6),
@@ -149,13 +133,13 @@ class MarketPlaceItem extends StatelessWidget {
                     children: [
                       const Icon(Icons.location_on,
                           size: 16, color: Colors.grey),
-                      Text(
-                        request['request_details']?['cities'] is List<dynamic>
-                            ? (request['request_details']['cities']
-                                    as List<dynamic>)
-                                .join(', ')
-                            : "Not Specified",
-                        style: const TextStyle(color: Colors.grey),
+                      Expanded(
+                        child: Text(
+                          itemData.cities,
+                          style: const TextStyle(color: Colors.grey),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
                     ],
                   ),
@@ -167,17 +151,12 @@ class MarketPlaceItem extends StatelessWidget {
                       const Icon(Icons.camera_alt_outlined,
                           size: 16, color: Colors.pink),
                       Text(
-                        "${request['request_details']?['followers_range']?['ig_followers_min'] ?? "0"} - ${request['request_details']?['followers_range']?['ig_followers_max'] ?? "0"}",
+                        "${itemData.igFollowerMin} - ${itemData.igFollowerMax}",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       Text(
-                        request['request_details']?['categories']
-                                is List<dynamic>
-                            ? (request['request_details']['categories']
-                                    as List<dynamic>)
-                                .join(', ')
-                            : "Not Specified",
+                        itemData.categories,
                         style: const TextStyle(color: Colors.blue),
                       ),
                     ],
@@ -186,22 +165,34 @@ class MarketPlaceItem extends StatelessWidget {
               ),
             ),
           ),
-          if (request['is_high_value'] == true)
+          if (itemData.isValueHigh == true)
             Positioned(
-              top: 10,
-              right: 10,
+              top: 3,
+              right: 30,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.orange,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  "High Value",
-                  style: TextStyle(
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.cookie_rounded,
+                      size: 15,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12),
+                    ),
+                    const SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      "High Value",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -217,7 +208,12 @@ class MarketPlaceItem extends StatelessWidget {
         children: [
           Text("$title: ", style: const TextStyle()),
           Expanded(
-            child: Text(value, style: const TextStyle(color: Colors.black)),
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.black),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
