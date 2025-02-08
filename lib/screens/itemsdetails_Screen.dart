@@ -76,10 +76,9 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
                 ),
                 Padding(
-                  padding:const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -189,57 +188,61 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                         style: const TextStyle(color: Colors.black),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       Row(
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("WhatsApp Shared"),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 217, 247, 218)),
-                            child: const Row(
-                              children: [
-                                Text(
-                                  "Share via WhatsApp",
-                                  style: TextStyle(color: Colors.black),
-                                )
-                              ],
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("WhatsApp Shared"),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 217, 247, 218)),
+                              child: const Row(
+                                children: [
+                                  Text(
+                                    "Share via WhatsApp",
+                                    style: TextStyle(color: Colors.black),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           const SizedBox(
-                            width: 15,
+                            width: 10,
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("LinkedIn Shared"),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 185, 203, 255)),
-                            child: const Row(
-                              children: [
-                                Text(
-                                  "Share via LinkedIn",
-                                  style: TextStyle(color: Colors.black),
-                                )
-                              ],
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("LinkedIn Shared"),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 185, 203, 255)),
+                              child: const Row(
+                                children: [
+                                  Text(
+                                    "Share via LinkedIn",
+                                    style: TextStyle(color: Colors.black),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 25,
                       ),
                       Text(
                         "Key Highlights Details",
