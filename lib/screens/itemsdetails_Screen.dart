@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qoruz_marketplace/api/itemdata.dart';
 
 class MarketPlaceDetailsScreen extends StatelessWidget {
@@ -193,7 +194,7 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton(
+                            child: ElevatedButton.icon(
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -201,24 +202,26 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                                   ),
                                 );
                               },
+                              icon: const Icon(
+                                FontAwesomeIcons.whatsapp,
+                                size: 18,
+                                color: Colors.green,
+                              ),
+                              label: const Text(
+                                "Share via WhatsApp",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       const Color.fromARGB(255, 217, 247, 218)),
-                              child: const Row(
-                                children: [
-                                  Text(
-                                    "Share via WhatsApp",
-                                    style: TextStyle(color: Colors.black),
-                                  )
-                                ],
-                              ),
                             ),
                           ),
                           const SizedBox(
                             width: 10,
                           ),
                           Expanded(
-                            child: ElevatedButton(
+                            child: ElevatedButton.icon(
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -226,17 +229,19 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                                   ),
                                 );
                               },
+                              icon: const Icon(
+                                FontAwesomeIcons.linkedin,
+                                size: 18,
+                                color: Colors.indigo,
+                              ),
+                              label: const Text(
+                                "Share via LinkedIn",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       const Color.fromARGB(255, 185, 203, 255)),
-                              child: const Row(
-                                children: [
-                                  Text(
-                                    "Share via LinkedIn",
-                                    style: TextStyle(color: Colors.black),
-                                  )
-                                ],
-                              ),
                             ),
                           ),
                         ],
@@ -325,7 +330,7 @@ class MarketPlaceDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(
-                            width: 15,
+                            width: 10,
                           ),
                           Expanded(
                             child: ElevatedButton(
